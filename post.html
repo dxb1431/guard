@@ -1,0 +1,169 @@
+<style>
+  /*<![CDATA[*/
+  .fRpt {
+    background: var(--contentB);
+    padding: 20px;
+    border-radius: 5px;
+  }
+
+  .fRpt .t {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .fRpt .o {
+    display: inline-flex;
+    gap: 10px;
+  }
+
+  #fmRpt {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  #fmRpt > div > label {
+    font-size: 90%;
+    display: block;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+  #fmRpt div > input,
+  #fmRpt div > select,
+  #fmRpt div > textarea {
+    padding: 6px 10px;
+    border: none;
+    background: var(--transB);
+    border-radius: 5px;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    color: currentColor;
+  }
+  #fmRpt div > select option {
+    background: var(--bodyB);
+  }
+  #fmRpt div > button {
+    display: block;
+    width: 100%;
+    border: none;
+    background: var(--linkC);
+    padding: 8px 11px;
+    color: var(--bodyB);
+    border-radius: 5px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  #fmRpt button.wa {
+    background: #25d366;
+  }
+  /*]]>*/
+</style>
+
+<div class="fRpt">
+  <div class="t">
+    <h2>Report</h2>
+
+    <div class="o">
+      <label>
+        <input type="radio" name="contact" value="email" checked />
+        Email </label
+      ><br />
+
+      <label>
+        <input type="radio" name="contact" value="wa" />
+        WhatsApp
+      </label>
+    </div>
+  </div>
+
+  <div>
+    <form
+      class="fmRpt"
+      id="fmRpt"
+      data-message="Report.."
+      data-mail="sammods007@gmail.com"
+      data-wa="919149133053"
+    >
+      <div>
+        <label for="app_name">Game / Application Name</label>
+        <input type="text" name="app_name" id="app_name" value="InstaPro" />
+      </div>
+
+      <div>
+        <label for="app_issue">Issue</label>
+        <select name="app_issue" id="app_issue" required="">
+          <option>I can't download the APK file</option>
+          <option>I can't install the APK file</option>
+          <option>The file is not compatible</option>
+          <option>File does not exist</option>
+          <option>Update request</option>
+          <option>Copyright Infringment</option>
+          <option>Spam</option>
+          <option>Invalid Contents</option>
+          <option>Broken Links</option>
+          <option>Others</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="app_message">Details / Message</label>
+        <textarea name="app_message" id="app_message" cols="3" required=""></textarea>
+      </div>
+
+      <div>
+        <button type="submit">Send</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  /*<![CDATA[*/
+  (() => {
+    document.querySelectorAll("[name='contact']").forEach((e) => {
+      e.addEventListener("change", () => {
+        if (e.value == "wa" && e.checked) {
+          document.querySelector("#fmRpt button").classList.add("wa");
+        } else {
+          document.querySelector("#fmRpt button").classList.remove("wa");
+        }
+      });
+    });
+
+    const e = document.querySelector("#fmRpt");
+    e.addEventListener("submit", (t) => {
+      t.preventDefault();
+
+      const n = e.querySelector("[name=app_name]").value,
+        a = e.querySelector("[name=app_issue]").value,
+        o = e.querySelector("[name=app_message]").value,
+        m = `${e.getAttribute(
+          "data-message"
+        )}\n\nApp Name : ${n}\n\nIssue : \n${a}\n\nMessage : \n${o}\n\nReference page : \n${
+          location.href
+        }`;
+
+      const typeContact = document.querySelector('input[name="contact"]:checked').value;
+      if (typeContact === "wa") {
+        const text = `App Name : ${n}\n\nIssue :\n${a}\n\nMessage :\n${o}\n\nReference page :\n${location.href}`;
+        const url = `https://wa.me/${e.getAttribute("data-wa")}?text=${encodeURIComponent(text)}`;
+        window.open(url, "_blank");
+        return;
+      }
+
+      let s = `https://mail.google.com/mail/u/0/?view=cm&fs=1&tf=1&to=${e.getAttribute(
+        "data-mail"
+      )}&su=${encodeURIComponent(a)}&body=${encodeURIComponent(m)}`;
+
+      matchMedia("(max-width: 1024px)").matches &&
+        (s = `mailto:${e.getAttribute("data-mail")}?subject=${encodeURIComponent(
+          a
+        )}&body=${encodeURIComponent(m)}`);
+
+      window.open(s);
+    });
+  })();
+  /*]]>*/
+</script>
